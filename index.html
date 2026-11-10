@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nexus VTT</title>
+  <meta name="description" content="Mesa virtual de RPG para qualquer sistema, com Mestre e jogadores de IA. Desktop, Host e Cliente, pacotes .nexus." />
+  <link rel="icon" href="img/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0d12; --surface: #11151d; --card: #161b25; --border: #232a37;
+      --text: #e5e7eb; --muted: #94a3b8; --accent: #f59e0b; --accent-2: #fbbf24; --accent-soft: rgba(245,158,11,.12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Inter, system-ui, sans-serif; }
+    a { color: var(--accent-2); }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+    header.top { position: sticky; top: 0; z-index: 5; background: rgba(11,13,18,.85); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+    header.top .wrap { display: flex; align-items: center; gap: 12px; height: 60px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-family: Cinzel, serif; font-weight: 700; color: var(--accent-2); text-decoration: none; letter-spacing: .04em; }
+    .brand img { width: 34px; height: 34px; }
+    nav.links { margin-left: auto; display: flex; gap: 18px; align-items: center; }
+    nav.links a { color: var(--muted); text-decoration: none; font-size: 14px; }
+    nav.links a:hover { color: var(--text); }
+    .lang { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 8px; padding: 4px 10px; cursor: pointer; font: inherit; font-size: 13px; }
+    .hero { padding: 72px 0 40px; text-align: center; background: radial-gradient(ellipse at top, rgba(245,158,11,.14), transparent 60%); }
+    .hero img.logo { width: 112px; height: 112px; }
+    h1 { font-family: Cinzel, serif; font-size: clamp(36px, 6vw, 60px); margin: 12px 0 6px; color: var(--accent-2); letter-spacing: .05em; }
+    .tagline { font-size: clamp(17px, 2.2vw, 21px); color: var(--text); max-width: 760px; margin: 0 auto; }
+    .sub { color: var(--muted); max-width: 720px; margin: 12px auto 0; }
+    .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 28px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 10px; font-weight: 600; text-decoration: none; border: 1px solid var(--border); color: var(--text); background: var(--card); }
+    .btn.gold { background: linear-gradient(180deg, #f59e0b, #d97706); color: #1a1205; border-color: #b45309; }
+    .note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+    .shot { margin: 40px auto 0; border-radius: 14px; border: 1px solid var(--border); box-shadow: 0 30px 80px rgba(0,0,0,.5); width: 100%; max-width: 1040px; display: block; }
+    section { padding: 64px 0; border-top: 1px solid var(--border); }
+    h2 { font-family: Cinzel, serif; font-size: 30px; margin: 0 0 8px; color: var(--accent-2); }
+    .lead { color: var(--muted); margin: 0 0 32px; max-width: 760px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .card h3 { margin: 0 0 6px; font-size: 17px; color: var(--text); }
+    .card p { margin: 0; color: var(--muted); font-size: 15px; }
+    .icon { width: 36px; height: 36px; border-radius: 9px; background: var(--accent-soft); color: var(--accent-2); display: grid; place-items: center; font-size: 18px; margin-bottom: 12px; }
+    .feature { display: grid; grid-template-columns: 1fr 1.3fr; gap: 36px; align-items: center; margin-bottom: 56px; }
+    .feature:nth-child(even) { grid-template-columns: 1.3fr 1fr; }
+    .feature:nth-child(even) .txt { order: 2; }
+    .feature img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
+    .feature h3 { font-family: Cinzel, serif; font-size: 22px; margin: 0 0 8px; color: var(--accent-2); }
+    .feature p, .feature li { color: var(--muted); }
+    .diagram { font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; overflow-x: auto; color: var(--text); white-space: pre; }
+    details { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+    summary { cursor: pointer; font-weight: 600; }
+    details ol, details ul { color: var(--muted); padding-left: 20px; }
+    code { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; font-size: 13px; }
+    footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; text-align: center; border-top: 1px solid var(--border); }
+    [data-l="en"] { display: none; }
+    html[lang="en"] [data-l="pt"] { display: none; }
+    html[lang="en"] [data-l="en"] { display: revert; }
+    @media (max-width: 800px) {
+      .feature, .feature:nth-child(even) { grid-template-columns: 1fr; }
+      .feature:nth-child(even) .txt { order: 0; }
+      nav.links a { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="#"><img src="img/logo.svg" alt="" />NEXUS VTT</a>
+      <nav class="links">
+        <a href="#recursos"><span data-l="pt">Recursos</span><span data-l="en">Features</span></a>
+        <a href="#como"><span data-l="pt">Como funciona</span><span data-l="en">How it works</span></a>
+        <a href="#guias"><span data-l="pt">Guias</span><span data-l="en">Guides</span></a>
+        <a href="https://github.com/fabioschmidt01/nexus-vtt-site/releases/latest"><span data-l="pt">Baixar</span><span data-l="en">Download</span></a>
+        <button class="lang" id="lang" type="button">EN</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="wrap">
+      <img class="logo" src="img/logo.svg" alt="Nexus VTT" />
+      <h1>Nexus VTT</h1>
+      <p class="tagline" data-l="pt">A mesa de RPG no seu PC — para <b>qualquer sistema</b>, com <b>Mestre e jogadores de IA</b> sentados à mesa junto com os humanos.</p>
+      <p class="tagline" data-l="en">Your RPG table on the desktop — for <b>any system</b>, with an <b>AI Game Master and AI players</b> sitting next to the humans.</p>
+      <p class="sub" data-l="pt">Um PC hospeda a mesa e roda as IAs; os amigos entram com um código e jogam com a própria ficha, em tempo real.</p>
+      <p class="sub" data-l="en">One PC hosts the table and runs the AIs; friends join with a code and play their own character, in real time.</p>
+      <div class="cta">
+        <a class="btn gold" href="https://github.com/fabioschmidt01/nexus-vtt-site/releases/latest">⬇ <span data-l="pt">Baixar para Windows</span><span data-l="en">Download for Windows</span></a>
+        <a class="btn" href="#guias"><span data-l="pt">Como começar</span><span data-l="en">Getting started</span></a>
+      </div>
+      <p class="note" data-l="pt">Windows 10/11 · 64 bits · atualiza sozinho. O instalador ainda não é assinado: no aviso do SmartScreen, clique em <i>Mais informações → Executar assim mesmo</i>.</p>
+      <p class="note" data-l="en">Windows 10/11 · 64-bit · updates itself. The installer is not code-signed yet: on the SmartScreen warning, click <i>More info → Run anyway</i>.</p>
+      <img class="shot" src="img/compendio.png" alt="Nexus VTT — mesa" />
+    </div>
+  </div>
+
+  <section id="recursos">
+    <div class="wrap">
+      <h2 data-l="pt">Tudo que a mesa precisa</h2><h2 data-l="en">Everything the table needs</h2>
+      <p class="lead" data-l="pt">Monte o seu sistema, prepare a campanha, chame as IAs que você já tem e jogue.</p>
+      <p class="lead" data-l="en">Build your system, prepare the campaign, bring the AIs you already have — and play.</p>
+      <div class="grid">
+        <div class="card"><div class="icon">⚙</div>
+          <h3 data-l="pt">Qualquer sistema</h3><h3 data-l="en">Any system</h3>
+          <p data-l="pt">Atributos, recursos, fórmula de dados, resultados, ações, tabelas encadeadas, condições, bestiário, itens e magias — tudo como dados, sem programar.</p>
+          <p data-l="en">Attributes, resources, dice formula, outcomes, actions, chained tables, conditions, bestiary, items and spells — all as data, no coding.</p></div>
+        <div class="card"><div class="icon">✦</div>
+          <h3 data-l="pt">IA de qualquer tipo</h3><h3 data-l="en">Any kind of AI</h3>
+          <p data-l="pt">Detecta o que já está no seu PC: CLIs (Gemini, Grok, Qwen, Codex, Claude Code…), servidores locais (Ollama, LM Studio…) e chaves de API. Uma IA por personagem, se quiser.</p>
+          <p data-l="en">Detects what is already on your PC: CLIs (Gemini, Grok, Qwen, Codex, Claude Code…), local servers (Ollama, LM Studio…) and API keys. One AI per character if you like.</p></div>
+        <div class="card"><div class="icon">⇄</div>
+          <h3 data-l="pt">Host e Cliente</h3><h3 data-l="en">Host and Client</h3>
+          <p data-l="pt">Um app só. Quem hospeda roda o Mestre, as IAs e a memória da campanha; quem entra recebe tudo ao vivo pelo seu servidor de sincronização.</p>
+          <p data-l="en">One app. The host runs the GM, the AIs and the campaign memory; players receive everything live through your sync relay.</p></div>
+        <div class="card"><div class="icon">✎</div>
+          <h3 data-l="pt">Sua ficha, suas regras</h3><h3 data-l="en">Your sheet, your rules</h3>
+          <p data-l="pt">O jogador cria a ficha num assistente que mostra bônus, penalidades e passivas de cada escolha, e consulta o Livro do jogador — o Mestre guarda os segredos dele.</p>
+          <p data-l="en">Players build their sheet in a wizard that shows each choice's bonuses, penalties and passives, and read the Player's Book — the GM keeps their own secrets.</p></div>
+        <div class="card"><div class="icon">▣</div>
+          <h3 data-l="pt">Pacotes .nexus</h3><h3 data-l="en">.nexus packs</h3>
+          <p data-l="pt">O RPG inteiro num arquivo: regras, livro, bestiário, campanha, fichas, lore e imagens. Mande para um amigo e ele recebe tudo montado.</p>
+          <p data-l="en">The whole RPG in one file: rules, book, bestiary, campaign, sheets, lore and images. Send it to a friend and it arrives fully assembled.</p></div>
+        <div class="card"><div class="icon">◫</div>
+          <h3 data-l="pt">Mesa modular e temas</h3><h3 data-l="en">Modular table and themes</h3>
+          <p data-l="pt">Arraste, solte, empilhe em abas ou solte em janelas flutuantes. Vários temas, do escuro ao pergaminho.</p>
+          <p data-l="en">Drag, drop, stack into tabs or float panels. Several themes, from dark to parchment.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="feature">
+        <div class="txt">
+          <h3 data-l="pt">Crie sua ficha sabendo o preço de cada escolha</h3><h3 data-l="en">Build your sheet knowing the cost of each choice</h3>
+          <p data-l="pt">O assistente segue os passos do sistema. Em verde o que você ganha, em vermelho o que você paga, em azul as passivas. Pronta, ela vai para o Mestre aprovar.</p>
+          <p data-l="en">The wizard follows the system's steps. Green is what you gain, red is what you pay, blue are passives. When done, it goes to the GM for approval.</p>
+        </div>
+        <img src="img/ficha.png" alt="" loading="lazy" />
+      </div>
+      <div class="feature">
+        <div class="txt">
+          <h3 data-l="pt">O livro inteiro, na mesa</h3><h3 data-l="en">The whole book, at the table</h3>
+          <p data-l="pt">Regras, criação, mapas e tabelas para consulta durante o jogo — com busca. Seções do Mestre nunca chegam aos jogadores.</p>
+          <p data-l="en">Rules, character creation, maps and tables to look up during play — with search. GM sections never reach the players.</p>
+        </div>
+        <img src="img/livro.png" alt="" loading="lazy" />
+      </div>
+      <div class="feature">
+        <div class="txt">
+          <h3 data-l="pt">Do seu jeito</h3><h3 data-l="en">Your way</h3>
+          <p data-l="pt">Cada painel é uma peça: roteiro, ficha, compêndio, histórico, grupo, cena. Monte o layout que funciona para você — ele fica salvo.</p>
+          <p data-l="en">Every panel is a piece: GM guide, sheet, compendium, log, party, scene. Arrange the layout that works for you — it is saved.</p>
+        </div>
+        <img src="img/tema.png" alt="" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <section id="como">
+    <div class="wrap">
+      <h2 data-l="pt">Como funciona</h2><h2 data-l="en">How it works</h2>
+      <p class="lead" data-l="pt">Só um PC precisa rodar as IAs. O servidor de sincronização é pequeno, fica no seu VPS e apenas repassa mensagens — nenhuma IA roda nele.</p>
+      <p class="lead" data-l="en">Only one PC runs the AIs. The sync relay is tiny, lives on your VPS and only forwards messages — no AI runs there.</p>
+      <div class="diagram"> PC HOST (app)                     VPS (relay)                  PC CLIENTE / CLIENT (app)
+ Mestre IA + jogadores IA   ──►  salas, código de entrada ──►  espelha a mesa
+ GM AI + AI players              rooms, join code              mirrors the table
+ StoryBrain + campanha      ◄──  eventos numerados        ◄──  ações e rolagens
+                                 numbered event log            actions and rolls</div>
+    </div>
+  </section>
+
+  <section id="guias">
+    <div class="wrap">
+      <h2 data-l="pt">Guias rápidos</h2><h2 data-l="en">Quick guides</h2>
+      <p class="lead" data-l="pt">Do download à primeira sessão.</p><p class="lead" data-l="en">From download to your first session.</p>
+
+      <details open>
+        <summary><span data-l="pt">Instalar e importar um RPG</span><span data-l="en">Install and import an RPG</span></summary>
+        <ol data-l="pt">
+          <li>Baixe e rode o instalador (<a href="https://github.com/fabioschmidt01/nexus-vtt-site/releases/latest">último release</a>).</li>
+          <li>No Launcher, abra <b>Pacotes → Importar pacote</b> e escolha o arquivo <code>.nexus</code> que você recebeu — ou dê dois cliques no arquivo.</li>
+          <li>O sistema, a campanha, as fichas e as imagens aparecem nas abas do Launcher.</li>
+        </ol>
+        <ol data-l="en">
+          <li>Download and run the installer (<a href="https://github.com/fabioschmidt01/nexus-vtt-site/releases/latest">latest release</a>).</li>
+          <li>In the Launcher, open <b>Packs → Import pack</b> and pick the <code>.nexus</code> file you received — or double-click the file.</li>
+          <li>The system, campaign, sheets and images show up in the Launcher tabs.</li>
+        </ol>
+      </details>
+
+      <details>
+        <summary><span data-l="pt">Entrar numa mesa</span><span data-l="en">Join a table</span></summary>
+        <ol data-l="pt">
+          <li>Peça ao Mestre o <b>endereço do servidor</b>, o <b>número da sala</b> e o <b>código</b>.</li>
+          <li>Em <b>Jogar → Entrar numa mesa</b>, preencha e entre.</li>
+          <li>No painel Ação, clique em <b>Criar minha ficha</b> (ou envie uma da sua biblioteca). O Mestre aprova e você está no jogo.</li>
+        </ol>
+        <ol data-l="en">
+          <li>Ask the GM for the <b>server address</b>, the <b>room number</b> and the <b>code</b>.</li>
+          <li>In <b>Play → Join a table</b>, fill them in and join.</li>
+          <li>In the Action panel, click <b>Create my sheet</b> (or send one from your library). The GM approves and you are in.</li>
+        </ol>
+      </details>
+
+      <details>
+        <summary><span data-l="pt">Montar o seu sistema</span><span data-l="en">Build your own system</span></summary>
+        <ul data-l="pt">
+          <li>Em <b>Sistemas</b>, duplique um modelo (d20, d100 ou 2d6) ou crie do zero.</li>
+          <li>Defina atributos, recursos, a fórmula (ex.: <code>2d6 + attr + mod</code>) e os resultados por condição (ex.: <code>total &gt;= 10</code>).</li>
+          <li>Adicione catálogos (raças, classes, bestiário, itens, magias) com bônus, penalidades e passivas, o Livro e os passos de criação. Marque o que é só do Mestre.</li>
+          <li>Use <b>Pacotes → Criar um pacote</b> para mandar o seu RPG para alguém.</li>
+        </ul>
+        <ul data-l="en">
+          <li>In <b>Systems</b>, duplicate a template (d20, d100 or 2d6) or start from scratch.</li>
+          <li>Define attributes, resources, the formula (e.g. <code>2d6 + attr + mod</code>) and outcomes by condition (e.g. <code>total &gt;= 10</code>).</li>
+          <li>Add catalogs (races, classes, bestiary, items, spells) with bonuses, penalties and passives, the Book and creation steps. Mark what is GM-only.</li>
+          <li>Use <b>Packs → Create a pack</b> to send your RPG to someone.</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span data-l="pt">Agentes de IA</span><span data-l="en">AI agents</span></summary>
+        <ul data-l="pt">
+          <li>Em <b>Agentes de IA → Detectar</b>, o app lista as IAs do seu PC: programas de linha de comando, servidores locais e chaves de API.</li>
+          <li>Escolha quem é o Mestre e quem joga cada personagem. Teste antes de jogar.</li>
+          <li>Só o PC que hospeda usa as IAs; chaves ficam criptografadas nesse PC.</li>
+        </ul>
+        <ul data-l="en">
+          <li>In <b>AI agents → Detect</b>, the app lists the AIs on your PC: command-line tools, local servers and API keys.</li>
+          <li>Choose who is the GM and who plays each character. Test before playing.</li>
+          <li>Only the hosting PC uses the AIs; keys stay encrypted on that PC.</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary><span data-l="pt">Instalar o servidor de sincronização (VPS)</span><span data-l="en">Install the sync relay (VPS)</span></summary>
+        <ol data-l="pt">
+          <li>No VPS (Ubuntu), instale o Node.js 22 ou mais novo.</li>
+          <li>Baixe o <code>nexus-relay-&lt;versão&gt;.mjs</code> do <a href="https://github.com/fabioschmidt01/nexus-vtt-site/releases/latest">último release</a>.</li>
+          <li>Rode com <code>RELAY_ADMIN_TOKEN=&lt;um segredo longo&gt; PORT=8787 node nexus-relay.mjs</code> (de preferência como serviço systemd, atrás de HTTPS).</li>
+          <li>No app, em Jogar → Hospedar, informe o endereço do servidor e o segredo.</li>
+        </ol>
+        <ol data-l="en">
+          <li>On the VPS (Ubuntu), install Node.js 22 or newer.</li>
+          <li>Download <code>nexus-relay-&lt;version&gt;.mjs</code> from the <a href="https://github.com/fabioschmidt01/nexus-vtt-site/releases/latest">latest release</a>.</li>
+          <li>Run <code>RELAY_ADMIN_TOKEN=&lt;a long secret&gt; PORT=8787 node nexus-relay.mjs</code> (ideally as a systemd service, behind HTTPS).</li>
+          <li>In the app, under Play → Host, enter the server address and the secret.</li>
+        </ol>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span data-l="pt">Nexus VTT · software proprietário · © 2026 fabioschmidt01. Todos os direitos reservados.</span>
+      <span data-l="en">Nexus VTT · proprietary software · © 2026 fabioschmidt01. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById("lang");
+      function set(l) {
+        root.lang = l === "en" ? "en" : "pt-BR";
+        btn.textContent = l === "en" ? "PT" : "EN";
+        try { localStorage.setItem("nexus-lang", l); } catch (e) {}
+      }
+      var saved = null;
+      try { saved = localStorage.getItem("nexus-lang"); } catch (e) {}
+      set(saved || ((navigator.language || "pt").toLowerCase().startsWith("pt") ? "pt" : "en"));
+      btn.addEventListener("click", function () { set(root.lang === "en" ? "pt" : "en"); });
+    })();
+  </script>
+</body>
+</html>
